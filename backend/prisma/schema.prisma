@@ -1,0 +1,39 @@
+generator client {
+    provider = "prisma-client"
+    output = "../generated/prisma"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+enum TradeSide {
+  BUY
+  SELL
+}
+
+enum TradeStatus {
+  ACTIVE
+  CANCELLED
+}
+
+model Trade {
+  id             String      @id @default(uuid()) @db.Uuid // Internal system ID
+  tradeId        String      @unique                       // Business key (e.g., "TRD-100001")
+  symbol         String      @db.VarChar(10)               // Stock ticker (e.g., "AAPL")
+  side           TradeSide
+  quantity       Int                                       // Use Float/Decimal if fractional shares allowed
+  price          Decimal     @db.Decimal(18, 4)            // Financial precision: up to 18 digits, 4 decimals
+  trader         String      @db.VarChar(50)               // Identifier of the trader
+  book           String      @db.VarChar(50)               // Portfolio or trading desk book name
+  counterparty   String      @db.VarChar(100)              // Entity on the other side of the trade
+  tradeTimestamp DateTime    @db.Timestamptz               // Saves exact time with zone data
+  status         TradeStatus @default(ACTIVE)
+  
+  // Auditing timestamps
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([symbol]) // Indexing symbol speeds up "get all trades for AAPL" queries
+  @@index([book])   // Indexing book speeds up reporting desk queries
+}
