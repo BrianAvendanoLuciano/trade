@@ -1,10 +1,10 @@
-import { Prisma, Trade, TradeStatus } from '../../generated/prisma/client';
-import {
+import type { Trade, TradeStatus } from '../../generated/prisma/client';
+import type {
   TradeCreateInput,
   TradeUpdateInput,
 } from '../../generated/prisma/models';
 import { prisma } from '../config/database';
-import { PaginatedTrades } from '../types/trade';
+import type { PaginatedTrades } from '../types/trade';
 
 export default class TradeRepository {
   async getAllTrade(page: number, limit: number): Promise<PaginatedTrades> {

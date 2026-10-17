@@ -1,4 +1,4 @@
-import {
+import type {
   TradeCreateInput,
   TradeUpdateInput,
 } from '../../generated/prisma/models';
@@ -18,9 +18,7 @@ export default class TradeService {
   }
 
   async createTrade(data: TradeCreateInput) {
-    const createdTrade = await this.tradeRepository.createTrade(data);
-
-    return createdTrade;
+    return this.tradeRepository.createTrade(data);
   }
 
   async amendTrade(id: string, data: TradeUpdateInput) {
